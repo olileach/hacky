@@ -1,3 +1,5 @@
+# Author Oli
+
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 from random import randrange
 import json
