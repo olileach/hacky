@@ -16,6 +16,7 @@
  */
  '''
 
+from hackyAuth import IoTAuth
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 import logging
 import time
@@ -23,16 +24,13 @@ import time
 class IotSubscribe:
 
     def __init__(self, topic=None, message="Can you see me"):
-        self.host = 'a3u5wn9s3a3oaw.iot.eu-west-2.amazonaws.com'
-        self.certificatePath = 'modules/certs/13f1341faa-private.pem.crt'
-        self.privateKeyPath = 'modules/certs/13f1341faa-private.pem.key'
-        self.rootCAPath = 'modules/certs/rootCA.pem'
+        
         self.topic = 'lcd/data'
-        self.port = 8883
+        self.client = IoTAuth().client_connect(self)
         #self.clientId = "basicPubSub"
         self.clientId = "a2138789127398"
 
-    def Dmain(self):
+    def main(self):
         # Custom MQTT message callback
         def customCallback(client, userdata, message):
             print("Received a new message: ")
@@ -41,27 +39,16 @@ class IotSubscribe:
             print(message.topic)
             print("--------------\n\n")
 
-        # Init AWSIoTMQTTClient
-        myAWSIoTMQTTClient = None
-        myAWSIoTMQTTClient = AWSIoTMQTTClient(self.clientId)
-        myAWSIoTMQTTClient.configureEndpoint(self.host, 8883)
-        myAWSIoTMQTTClient.configureCredentials(self.rootCAPath, self.privateKeyPath, self.certificatePath)
-
         # AWSIoTMQTTClient connection configuration
-        myAWSIoTMQTTClient.configureAutoReconnectBackoffTime(1, 32, 20)
-        myAWSIoTMQTTClient.configureOfflinePublishQueueing(-1)  # Infinite offline Publish queueing
-        myAWSIoTMQTTClient.configureDrainingFrequency(2)  # Draining: 2 Hz
-        myAWSIoTMQTTClient.configureConnectDisconnectTimeout(10)  # 10 sec
-        myAWSIoTMQTTClient.configureMQTTOperationTimeout(5)  # 5 sec
+        self.client.configureAutoReconnectBackoffTime(1, 32, 20)
+        self.client.configureOfflinePublishQueueing(-1)  # Infinite offline Publish queueing
+        self.client.configureDrainingFrequency(2)  # Draining: 2 Hz
+        self.client.configureConnectDisconnectTimeout(10)  # 10 sec
+        self.client.configureMQTTOperationTimeout(5)  # 5 sec
 
         # Connect and subscribe to AWS IoT
         while True:
-            myAWSIoTMQTTClient.connect()
-            myAWSIoTMQTTClient.subscribe(self.topic, 1, customCallback)
+            self.client.connect()
+            self.client.subscribe(self.topic, 1, customCallback)
             time.sleep(2)
 
-
-if __name__ == "__main__":
-
-    instance = IotSubscribe()
-    instance.Dmain()
