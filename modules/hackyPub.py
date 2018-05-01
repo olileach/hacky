@@ -5,8 +5,8 @@ import json
 
 class IoTPublish():
 
-    def __init__(self, serialnumber, topic=None, message="Can you see me"):
-        self.topic = 'lcd/data'
+    def __init__(self, serialnumber, topic, message):
+        self.topic = topic
         self.client = IoTAuth().client_connect(self)
         self.message = message
         self.serialnumber = serialnumber
