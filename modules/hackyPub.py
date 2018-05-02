@@ -16,10 +16,23 @@ class IoTPublish():
         self.client.connect()
         message = {}
         message['message'] = self.message
-        message['sequence'] = 1 
+        message['sequence'] = 1
         messageJson = json.dumps(message)
 
         self.client.publish(self.topic, self.message, 0)
         self.client.disconnect()
         print('Published topic %s: %s\n' % (self.topic, messageJson))
         print(self.serialnumber)
+
+    def send(self, debug=False):
+        self.client.connect()
+        message = {}
+        message['message'] = self.message
+        message['sequence'] = 1
+        messageJson = json.dumps(message)
+
+        self.client.publish(self.topic, self.message, 0)
+        self.client.disconnect()
+        if debug:
+            #print(self.serialnumber)
+            print('Published topic %s: %s\n' % (self.topic, messageJson))
