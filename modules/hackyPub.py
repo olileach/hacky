@@ -21,8 +21,7 @@ class IoTPublish():
 
         self.client.publish(self.topic, self.message, 0)
         self.client.disconnect()
-        print('Published topic %s: %s\n' % (self.topic, messageJson))
-        print(self.serialnumber)
+        print('\nPublished topic %s: %s\n' % (self.topic, messageJson))
 
     def send(self, debug=False):
         self.client.connect()
